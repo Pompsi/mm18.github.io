@@ -6,7 +6,7 @@ function createObjects() {
   for (var movie of movies) {
     movie.r = movie.size * 50;
 
-    objects.push(new MovieObject(movie.title,movie.id,movie.x,movie.y,movie.r,movie.col))
+    objects.push(new MovieObject(movie.title, movie.id, movie.x, movie.y, movie.r, movie.col))
 
   }
   return objects;
@@ -22,8 +22,9 @@ class MovieObject {
     this.color = color;
 
     this.oldscale = scale;
-    this.active = true;
     this.oldzoom = zoomlevel;
+
+    this.active = true;
     this.fontsize = this.fontSize();
   }
 
@@ -71,26 +72,25 @@ class MovieObject {
   }
 
   draw() {
-    if (this.outOfBounds() || !this.active) {return;}
+    if (this.outOfBounds()) {return;}
 
     ctx.save();
 
     ctx.fillStyle = this.color;
-    //ctx.strokeStyle = this.color;
-    //ctx.lineWidth = 1;
 
     ctx.translate(this.x, this.y);
     ctx.beginPath();
     ctx.arc(0, 0, this.r, 0, Math.PI*2, true);
-    ctx.globalAlpha = 0.6;
+    if (this.active) {
+      ctx.globalAlpha = 0.6;
+    } else {
+      ctx.globalAlpha = 0.1;
+    }
+
     ctx.fill();
-    //ctx.globalAlpha = 1;
-    //ctx.stroke();
-    ctx.closePath();
 
     ctx.restore();
-
-    if (this.r*2 > 0.3*width/*this.fontsize > 6*/) {
+    if ((this.fontsize > 7 || this.r*2 > 0.4*width || this.r*2 > 0.4*height) && this.active) {
       this.drawTitle();
     }
   }

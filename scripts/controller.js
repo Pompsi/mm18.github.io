@@ -12,6 +12,16 @@ var scale = undefined;  // scale
 var zoomdelta = 1.3;    // Zoomdelta
 var zoomlevel = 1;      // current zoom level
 var hover = undefined;  // hovered marker
+var minzoom = 1;
+
+var pointers = []
+var pointerD = undefined;
+var dragX = undefined;
+var dragY = undefined;
+var dragSX = undefined;
+var dragSY = undefined;
+var moved = false;
+
 // #endregion
 
 
@@ -35,6 +45,7 @@ function init() {
     ctx.translate(0,(height-width)/2)
   }
 
+  minzoom = zoomlevel;
   updateMap();
 
 }
@@ -67,8 +78,7 @@ function resetMap() {
   dragY = undefined;
   dragSX = undefined;
   dragSY = undefined;
-  zoomdelta = 1.3;
-  zoomlevel = 1;
+  pointerD = undefined;
   hover = undefined;
   width = 4000;
   height = 4000;
@@ -78,25 +88,33 @@ function resetMap() {
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-  // resizing (necessary?)
+  // resizing if necessary
   resize();
+
 
   // creating markers
   objects = createObjects();
 
   addHandlers();
 
-  // centering content in canvas
-  if (width > height) {
-    ctx.translate((width-height)/2,0)
-  } else {
-    ctx.translate(0,(height-width)/2)
-  }
+  centerMap();
+
+  minzoom = zoomlevel;
 
   // update and add markers
   updateMovies();
   updateMap();
 
+}
+
+function centerMap() {
+  // centering content in canvas
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  if (width > height) {
+    ctx.translate((width-height)/2,0)
+  } else {
+    ctx.translate(0,(height-width)/2)
+  }
 }
 
 function focusOn(movie) {
@@ -108,9 +126,9 @@ function focusOn(movie) {
   movie.update();
 
   if (width < height) {
-    zoomlevel = (width*0.7)/(movie.r*2);
+    zoomlevel = (width*0.5)/(movie.r*2);
   } else {
-    zoomlevel = (height*0.7)/(movie.r*2);
+    zoomlevel = (height*0.5)/(movie.r*2);
   }
 
   updateMovies();
@@ -130,9 +148,9 @@ function updateMovies() {
 function resize() {
   /* when window resizes */
   var trf = ctx.getTransform();
-
-  canvas.width = document.getElementById("map").getBoundingClientRect().width;
-  canvas.height = document.getElementById("map").getBoundingClientRect().height;
+  var map = document.getElementById("map").getBoundingClientRect()
+  canvas.width = map.width;
+  canvas.height = map.height;
 
   if (canvas.width > canvas.height) {
     scale = (height/canvas.height);
@@ -155,35 +173,23 @@ function resize() {
 }
 
 function zoom(e) {
-
-  let prev = zoomlevel;
-
-  if (e.dir == -1 || e.dir == 1) {
-    var direction = e.dir
-    zoomdelta = e.delta
+  if (e.wheelDelta != undefined) {
+    zoomdelta = e.wheelDelta/100;
   } else {
-    zoomdelta = 1.3;
-    var direction = (e.wheelDelta/(Math.abs(e.wheelDelta)))
+    zoomdelta = e.delta
   }
 
   var pos = getMapCoordinates(e.x,e.y);
 
-  if (direction < 0) {
-    zoomlevel = zoomlevel/zoomdelta;
-
-    if (zoomlevel < 0.5) {
-      zoomlevel = 0.5;
-      return;
-    }
-
-    var x = -(pos.x/zoomdelta-e.x)
-    var y = -(pos.y/zoomdelta-e.y)
-
-  } else {
+  if (zoomdelta > 0) {
     zoomlevel = zoomlevel*zoomdelta;
-
     var x = -(pos.x*zoomdelta-e.x)
     var y = -(pos.y*zoomdelta-e.y)
+  } else {
+    zoomdelta = Math.abs(zoomdelta)
+    zoomlevel = zoomlevel/zoomdelta;
+    var x = -(pos.x/zoomdelta-e.x)
+    var y = -(pos.y/zoomdelta-e.y)
   }
 
   ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -212,14 +218,6 @@ function getMapCoordinates(x,y) {
 
 /* ---------- HANDLERS ---------- */
 // #region HANDLERS
-
-var pointers = []
-var pointerD = undefined;
-var dragX = undefined;
-var dragY = undefined;
-var dragSX = undefined;
-var dragSY = undefined;
-var moved = false;
 
 function pointerDelta() {
 
@@ -260,7 +258,7 @@ function startDrag(e) {
   if (pointers.length == 0) {
     moved = false;
     canvas.removeEventListener("pointermove", updateCursor);
-    document.addEventListener("pointermove", updatePointers)
+    canvas.addEventListener("pointermove", updatePointers)
     document.addEventListener("pointerup", endDrag)
     //dragX = e.x;
     //dragY = e.y;
@@ -332,8 +330,8 @@ function endDrag(e) {
   }
 
   if (pointers.length == 0) {
-    document.removeEventListener("pointermove", updatePointers)
-    document.removeEventListener("pointerup", updatePointers)
+    canvas.removeEventListener("pointermove", updatePointers)
+    document.removeEventListener("pointerup", endDrag)
     canvas.addEventListener("pointermove", updateCursor)
 
     if (!moved) {
@@ -390,16 +388,16 @@ function pinchZoom() {
     return;
   }
 
+  var d = (newD-pointerD);
+  if (d > 10) {
+    d = 10;
+  }
+
   var setup = {
     x: (pointer1.x+pointer2.x)/2,
     y: (pointer1.y+pointer2.y)/2,
-    dir: 1,
-    delta: 1+Math.abs(newD-pointerD)/100
+    delta: 1+(d/100)
   };
-
-  if (newD < pointerD) {
-    setup.dir = -1;
-  }
 
   zoom(setup);
 
@@ -439,13 +437,7 @@ function showMovies(ids) {
   }
 
   for (var movie of objects) {
-    movie.active = false;
-    for (var id of ids) {
-      if (movie.id == id) {
-        movie.active = true;
-        break;
-      }
-    }
+    movie.active = ids.includes(movie.id)
   }
   updateMap();
 }
@@ -468,16 +460,5 @@ function updateCursor(e) {
   hover = undefined;
   document.body.style.cursor = "grab";
 }
-
-// #endregion
-
-
-// #region TODO
-
-/*
-  TODO:
-    suorituskyky
-    haulle uusi logiikka?
-*/
 
 // #endregion
