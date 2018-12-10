@@ -1,0 +1,389 @@
+@media only screen and
+(max-width: 800px) and
+(orientation: portrait) {
+  #iright {
+    border-left: 0px solid #fff;
+    width: 100%;
+  }
+  #iruntime {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+  #ilanguage {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+    text-transform: uppercase;
+  }
+
+  #irelease {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+}
+
+@media only screen and
+(max-width: 800px) and
+(orientation: landscape) {
+  #iright {
+    font-size: 0.9em;
+    border-left: 2px solid #fff;
+    width: calc(40vw - 2px);
+  }
+  #iruntime {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+  #ilanguage {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+    text-transform: uppercase;
+  }
+
+  #irelease {
+    font-size: 0.9em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+}
+
+@media only screen and
+(min-width: 800px) and
+(orientation: portrait) {
+  #iright {
+    border-left: 0px solid #fff;
+    width: 100%;
+  }
+  #iruntime {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+  #ilanguage {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+    text-transform: uppercase;
+  }
+
+  #irelease {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+}
+
+@media only screen and
+(min-width: 800px) and
+(orientation: landscape) {
+  #iright {
+    border-left: 2px solid #fff;
+    width: calc(40vw - 2px);
+  }
+  #iruntime {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+  #ilanguage {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+    text-transform: uppercase;
+  }
+
+  #irelease {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+}
+
+@media only screen and (min-width: 1050px) {
+  #iright {
+    font-size: 1.0em;
+    border-left: 2px solid #fff;
+    width: calc(25vw - 2px);
+  }
+  #iruntime {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+
+  #ilanguage {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+    text-transform: uppercase;
+  }
+
+  #irelease {
+    font-size: 1.2em;
+    text-shadow: 1px 1px 1px #414141;
+  }
+}
+
+body {
+  background-color: black;
+  font-family: Arial;
+  font-size: 1em;
+  color: #000;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: #000;
+}
+
+h1 {
+  margin-top: 35px;
+  font-family: Georgia;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 2.0em;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px #000;
+  background-color: #b7b7b7;
+  line-height: 0.8;
+}
+
+h2 {
+  margin: 10px 0px;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: Arial;
+  font-size: 1.4em;
+  font-weight: normal;
+  color: #fff;
+  text-shadow: 1px 1px 1px #000, 0px 0px 10px #fff;
+  letter-spacing: 1px;
+}
+
+#itagline {
+  font-weight: normal;
+  font-family: Georgia;
+  font-style: italic;
+  margin: 15px;
+  text-align: center;
+  font-size: 1.2em;
+  margin-top: -15px;
+  color: #fff;
+  text-shadow: 1px 1px 0px #000;
+}
+
+.itext {
+  padding: 0px 15px 0px 15px;
+}
+
+.iq1 {
+  position: relative;
+  top: 40px;
+  margin-top: -60px;
+  font-family: Georgia;
+  color: #000;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 3em;
+  text-shadow: 0px 0px 1px #000;
+}
+
+.iq2 {
+  text-align: right;
+  position: relative;
+  top: -20px;
+  margin-bottom: -50px;
+  right: 5px;
+  font-family: Georgia;
+  color: #000;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 3em;
+  text-shadow: 0px 0px 1px #000;
+}
+
+#igenres {
+  padding: 10px;
+  font-weight: normal;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.5em;
+  text-shadow: 1px 1px 0px #000;
+}
+
+.ig1 {
+  color: #fff;
+}
+
+.ig2 {
+  color: #6e6e6e;
+}
+
+.ig3 {
+  color: #000;
+}
+
+#ikeywords {
+  text-align: center;
+  text-shadow: 1px 1px 0px #000;
+}
+
+.ik1 {
+  color: #fff;
+}
+
+.ik2 {
+  color: #dcdcdc;
+  font-size: 1.2em;
+}
+
+.ik3 {
+  color: #000;
+  font-size: 1.4em;
+}
+
+.ik4 {
+  color: #4d4d4d;
+  font-size: 1.3em;
+}
+
+
+
+#ileadacts, #iinfo2{
+  background-color: #8e8e8e;
+  width: 100%;
+  font-size: 0.9em;
+  border: 0px solid #000;
+  border-collapse: collapse;
+  text-align: center;
+  color: #000;
+  box-shadow: 0px 0px 15px #4d4d4d;
+  -moz-box-shadow: 0px 0px 15px #4d4d4d;
+}
+
+#iinfo {
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+#iinfo td {
+  background-color: #fff;
+}
+
+#ishadow {
+  box-shadow: 0px 0px 15px #4d4d4d;
+  -moz-box-shadow: 0px 0px 15px #4d4d4d;
+}
+
+#iinfo2 {
+  text-align: justify;
+  background-color: #bbbbbb;
+  box-shadow: 0px 0px 0px #4d4d4d;
+  -moz-box-shadow: 0px 0px 0px #4d4d4d;
+}
+
+#ileadacts tr, #iinfo2 tr {
+  border-bottom: 1px solid #4d4d4d;
+}
+
+#iinfo2 td:first-child {
+  text-shadow: 1px 1px 1px #a7a7a7;
+  color: #fff;
+  font-weight: bold;
+}
+
+th, td{
+  padding: 5px;
+}
+
+th {
+  background-color: #d9d9d9;
+  color: #696969;
+}
+
+#ipage {
+  background-color: #fff;
+  text-align: center;
+  margin-top: 10px;
+}
+
+#ileft {
+  background-color: grey;
+  background-image: linear-gradient(to right,#bbbbbb,#6f6f6f);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: calc(20vw - 2px);
+  height: 100%;
+  overflow: auto;
+  border-right: 2px solid #fff;
+}
+#iright {
+  cursor: default;
+  background-color: grey;
+  position: absolute;
+  height: 100%;
+  top: 0px;
+  right: 0px;
+  overflow: auto;
+  background-image: linear-gradient(to left,#bbbbbb,#6f6f6f);
+}
+
+#map {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+}
+
+#iclose {
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  z-index: 2;
+  color: #fff;
+  font-weight: bold;
+  font-family: Georgia;
+  font-size: 3em;
+  text-shadow: 1px 1px 1px #000, 0px 0px 10px #fff;
+}
+
+#iopen {
+  position: absolute;
+  top: -20px;
+  right: 20px;
+  z-index: 2;
+  color: #fff;
+  font-weight: bold;
+  font-family: Georgia;
+  font-size: 3em;
+  text-shadow: 1px 1px 1px #000, 0px 0px 10px #fff;
+}
+
+.ishow {
+  display: block;
+  z-index: 1;
+  animation-name: rightIn;
+  animation-duration: 1.0s;
+}
+
+.ihide {
+  display: none;
+}
+
+.ishow2 {
+  display: block;
+}
+
+.ihide2 {
+  display: none;
+}
+
+@keyframes rightIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

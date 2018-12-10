@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Movie Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../scripts/genres.js"></script>
+    <script type="text/javascript" src="../scripts/controller.js"></script>
+    <script type="text/javascript" src="../scripts/MovieObject.js"></script>
+    <script type="text/javascript" src="../scripts/info.js"></script>
+    <script type="text/javascript" src="../scripts/infowindows.js"></script>
+	  <script type="text/javascript" src="../scripts/search.js"></script>
+    <script type="text/javascript" src="../data/mapdata.json"></script>
+    <script type="text/javascript" src="../data/parsedmovies.json"></script>
+    <link rel="stylesheet" href="../styles/styles.css" type="text/css"/>
+    <link rel="stylesheet" href="../styles/stylet.css" type="text/css"/>
+    <link rel="stylesheet" href="../styles/tyylit.css" type="text/css"/>
+    <link rel="stylesheet" href="../styles/dialogstyle.css" type="text/css"/>
+  </head>
+  <body>
+    <!--kartta-->
+    <div id="map">
+      <canvas id="canvas">Get a better browser!</canvas>
+      <button type="button" id="button">RESET</button>
+    </div>
+    <!--navi-->
+    <nav class="navigation">
+      <div id="leftSidenav">
+        <input type="checkbox" />
+        <span></span>
+        <span></span>
+        <span></span>
+        <ul id="menu">
+          <button class="dropbtn" style="margin-top: 100px">Movie</button>
+            <div id="myDropdown" class="dropdown-content">
+              <form id="movies">
+                <input type="text" placeholder="Type in movies name" id="movieInput" onkeyup ="" minlength="3">
+              </form>
+            </div>
+          <button class="dropbtn">Genre</button>
+            <div id="myDropdown" class="dropdownScrollbar-content">
+                <form id="genre">
+                  <a href="#" data-name="Action">Action</a>
+                  <a href="#" data-name="Adventure">Adventure</a>
+                  <a href="#" data-name="Animation">Animation</a>
+                  <a href="#" data-name="Comedy">Comedy</a>
+                  <a href="#" data-name="Crime">Crime</a>
+                  <a href="#" data-name="Documentary">Documentary</a>
+                  <a href="#" data-name="Drama">Drama</a>
+                  <a href="#" data-name="Family">Family</a>
+                  <a href="#" data-name="Fantasy">Fantasy</a>
+                  <a href="#" data-name="Foreign">Foreign</a>
+                  <a href="#" data-name="History">History</a>
+                  <a href="#" data-name="Horror">Horror</a>
+                  <a href="#" data-name="Music">Music</a>
+                  <a href="#" data-name="Mystery">Mystery</a>
+                  <a href="#" data-name="Romance">Romance</a>
+                  <a href="#" data-name="Science Fiction">Science Fiction</a>
+                  <a href="#" data-name="Thriller">Thriller</a>
+                  <a href="#" data-name="TV Movie">TV Movie</a>
+                  <a href="#" data-name="War">War</a>
+                  <a href="#" data-name="Western">Western</a>
+                </form>
+            </div>
+          <button class="dropbtn">Actor</button>
+            <div id="myDropdown" class="dropdown-content">
+              <form id="actors">
+                <input type="text" placeholder="Type in actors name" id="actorInput" onkeyup="submit" minlength="2">
+              </form>
+            </div>
+          <button class="dropbtn">Year</button>
+            <div id="myDropdown" class="dropdown-content">
+                <form id="year">
+                  <input type="number" placeholder="min.." id="minYear"  maxlength="4"> <input type="number" placeholder="max.." id="maxYear"  maxlength="4">
+                </form>
+              <input type="submit" value="Search" onclick="movieYearSearch()" id="searchButton">
+            </div>
+          <button class="dropbtn">Length</button>
+            <div id="myDropdown" class="dropdown-content" style="margin-bottom: 100px">
+                <form id="length">
+                  <input type="number" placeholder="min.." id="minLength"> <input type="number" placeholder="max.." id="maxLength">
+                </form>
+              <input type="submit" value="Search" onclick="movieLengthSearch()" id="searchBtn">
+            </div>
+        </ul>
+      </div>
+    </nav>
+    <!--info-->
+	<a href="" id="iopen"></a>
+	<div class="ihide" id="iright">
+      <h1 id="iotsikko">Info</h1>
+      <div id="itagline"></div>
+      <div class="iq1">"</div>
+      <div class="itext" id="ioverview"></div>
+      <div class="iq2">"</div>
+      <div id="igenres"></div>
+      <div id="ishadow">
+        <table id="iinfo">
+          <tr>
+            <th>Language</th>
+            <th>Release</th>
+            <th>Runtime</th>
+          </tr>
+          <tr>
+            <td><span id="ilanguage"></span></td>
+            <td><span id="irelease"></span></td>
+            <td><span id="iruntime"></span></td>
+          </tr>
+        </table>
+        <table id="iinfo2">
+          <tr>
+            <td>Directors</td>
+            <td><span id="idirectors"></span></td>
+          </tr>
+          <tr>
+            <td>Producers</td>
+            <td><span id="iproducers"></span></td>
+          </tr>
+          <tr>
+            <td>Writers</td>
+            <td><span id="iwriters"></span></td>
+          </tr>
+        </table>
+      </div>
+      <h2>Leadacts</h2>
+      <table id="ileadacts">
+        <tr>
+          <th>Actor</th>
+          <th>Character</th>
+        </tr>
+      </table>
+      <h2>Keywords</h2>
+      <div id="ikeywords">
+      </div>
+      <div id="ipage">
+        <a target="_blank" id="ihomepage">Homepage</a>
+      </div>
+    </div>
+    <div id="dlg-background"></div>
+    <!-- helppilaatikko -->
+    <div id="helpbox">
+      <div id="dlg-header"><b>Getting started with MovieMap</b></div>
+      <div id="dlg-body" style="overflow-y: auto;">
+	    <div>
+		  <p><b>What this application is about</b></p>
+		  <p>This map represents the popularity and genre of approximately 5000 movies.
+		  The popularity is represented by circles of varying sizes and genres are
+		  specified by the colour of these circles.</p>
+		  <p>MovieMap aims at bulding a map where you can easily
+          search movies by name, genre, length, release year or actor while also
+          offering a chance to discover movies just by browsing the map. We hope
+          that this application introduces new movies for you to watch or lets you
+          rediscover some of your old favourites. This project is non-commercial
+		  and does not make any money. </p>
+		  <p><b>About the data</b></p>
+		  <p>The data we are using is not guaranteed to be precise and we do not
+		  take any responsibility about the factuality of this data.
+		  For example some of the movies have a runtime length of 0 and some
+		  popular movies have really low popularity which has an influence
+		  on the size of the circles.</p>
+		</div>
+		<div>
+		  <p><b>How to use this application</b></p>
+		  <p>You can open and close the navigation/search panel from the top left
+		  corner of the page. From there you have several options how to filter
+		  the map to suit your needs. From top to bottom you have option to
+		  search movies by name, genre, actor(s), release year and length of
+		  the movie. (You can use one of these after another to filter the
+		  results even further if you want.)</p>
+		  <p>The map itself represents the movies as circles of various different
+		  colours and each of these represent one of the genres you can find by
+		  clicking the 'Colours' button at the bottom of the map. The size of
+		  the circles represent the popularity of movies which is based on the
+		  data we are using.</p>
+		  <p>You can see more information about the movie you want by clicking the
+		  circle that represents it. After that you can see various information
+		  about the movie in the information panel that opens.</p>
+		</div>
+      </div>
+      <div id="dlg-footer">
+        <button onclick="helpOK()">OK</button>
+      </div>
+    </div>
+    <!-- infolaatikko -->
+    <div id="dlgbox">
+      <div id="dlg-header"><b>About MovieMap</b></div>
+      <div id="dlg-body" style="overflow-y: auto;">
+        <p id="dlgtext">This application aims at bulding a map where you can easily
+          search movies by name, genre, length, release year or actor while also
+          offering a chance to discover movies just by browsing the map. We hope
+          that this application introduces new movies for you to watch or lets you
+          rediscover some of your old favourites.</p>
+        <p>The map is sorted by genres, each genre having a specific colour. Explanation
+          for these colours can be found by clicking the 'Colours' button at the bottom
+          of the map. Each movie is represented as a circle in the map and the size of
+          the circle represents the popularity of that movie. Popularity is based on
+          the data we are using.</p>
+        <p><b>The Data</b></p>
+        <p>The data we are using was parsed for the use of this application and it
+          consists of the following files:</p>
+        <p>mapdata.json: File that contains all the information we need for maintaining
+          the map including coordinates, IDs, titles, sizes and genres. Genres in this
+          file are more specific and contain some combinations for the purpose of
+		  finding one genre for each movie to represent the colour.</p>
+        <p>parsedmovies.json: File that contains the actual data about the movies,
+          including name, genres, summaries and many others. This file also includes
+          producers, writers, directors and some of the actors. This data is used
+          when displaying the full information of the movie after clicking it.</p>
+		<p>The data we are using is not guaranteed to be precise and we do not
+		  take any responsibility about the factuality of this data.</p>
+        <p><b>Acknowledgements</b></p>
+        <p>The dataset we are using was generated from The Movie Database API.
+          This product uses the TMDb API but is not endorsed or certified by TMDb.
+          Their API also provides access to data on many additional
+          movies, actors and actresses, crew members, and TV shows.</p>
+		<img src="../other/tmdb_logo.svg" alt="Powered by TMDb" height="70" width="70">
+      </div>
+      <div id="dlg-footer">
+        <button onclick="dlgOK()">OK</button>
+      </div>
+    </div>
+    <!-- genrelaatikko -->
+    <div id="genrebox">
+      <div id="dlg-header"><b>Genres:</b></div>
+      <div id="dlg-body" style="overflow-y: auto;">
+		<div class="dlggenre">
+		  <label style="color:#002db3;">&#9632<p>Action</p></label>
+		  <label style="color:#006666;">&#9632<p>Action Adventure</p></label>
+		  <label style="color:#4747d1;">&#9632<p>Action Thriller</p></label>
+		  <label style="color:#6699ff;">&#9632<p>Action Comedy</p></label>
+		  <label style="color:#2d862d;">&#9632<p>Adventure</p></label>
+		  <label style="color:#fff0b3;">&#9632<p>Animation</p></label>
+		  <label style="color:#ff751a;">&#9632<p>Comedy</p></label>
+		  <label style="color:#52527a;">&#9632<p>Crime Drama</p></label>
+		  <label style="color:#7575a3;">&#9632<p>Crime Thriller</p></label>
+		</div>
+		<div class="dlggenre">
+		  <label style="color:#b30000;">&#9632<p>Drama</p></label>
+		  <label style="color:#ff1a1a;">&#9632<p>Drama Comedy</p></label>
+		  <label style="color:#994d00;">&#9632<p>Documentary</p></label>
+		  <label style="color:#bbff99;">&#9632<p>Fantasy</p></label>
+		  <label style="color:#ffe066;">&#9632<p>Family Animation</p></label>
+		  <label style="color:#ffcc00;">&#9632<p>Family Movie</p></label>
+		  <label style="color:#b32d00;">&#9632<p>History</p></label>
+		  <label style="color:#4d004d;">&#9632<p>Horror</p></label>
+		  <label style="color:#009973;">&#9632<p>Musical</p></label>
+		</div>
+		<div class="dlggenre">
+		  <label style="color:#993366;">&#9632<p>Mystery</p></label>
+		  <label style="color:#c6538c;">&#9632<p>Mystery Thriller</p></label>
+		  <label style="color:#ff1a75;">&#9632<p>Romance</p></label>
+		  <label style="color:#ff66a3;">&#9632<p>Romantic Comedy</p></label>
+		  <label style="color:#cc0052;">&#9632<p>Romantic Drama</p></label>
+		  <label style="color:#66ff33;">&#9632<p>Science Fiction</p></label>
+		  <label style="color:#6666ff;">&#9632<p>Thriller</p></label>
+		  <label style="color:#b37700;">&#9632<p>Western</p></label>
+		</div>
+	  </div>
+      <div id="dlg-footer">
+        <button onclick="genresOK()">OK</button>
+      </div>
+    </div>
+    <!-- napit -->
+    <button id="helpbutton" onclick="showHelp()">Help</button>
+    <button id="about" onclick="showAbout()">About</button>
+    <button id="genrecolour" onclick="showGenres()">Colours</button>
+  </body>
+</html>

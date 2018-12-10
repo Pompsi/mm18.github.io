@@ -1,0 +1,34 @@
+About Sovellus
+
+This application aims at bulding a map where you can easily search movies by name, genre, length, release year
+or actor while also offering a chance to discover movies just by browsing the map. We hope that this application
+introduces new movies for you to watch or lets you rediscover some of your old favourites.
+
+The map is sorted by genres, each genre having a specific colour. Explanation for these colours can be found by
+clicking the 'Colours' button at the bottom of the map. Each movie is represented as a circle in the map and the
+size of the circle represents the popularity of that movie. Popularity is based on the data we are using.
+
+The Data
+
+The data we are using was parsed for the use of this application and it consists of the following files:
+
+mapdata.json: File that contains all the information we need for maintaining the map including coordinates, IDs,
+titles, sizes and genres. Genres in this file are more specific and contain some combinations for the purpose of
+finding one genre for each movie to represent the colour.
+
+parsedmovies.json: File that contains the actual data about the movies, including name, genres,
+summaries and many others. This file also includes producers, writers, directors and some of the actors.
+This data is used when displaying the full information of the movie after clicking it.
+
+The data we are using is not guaranteed to be precise and we do not
+take any responsibility about the factuality of this data.
+
+Acknowledgements
+
+The dataset we are using was generated from The Movie Database API.
+This product uses the TMDb API but is not endorsed or certified by TMDb.
+Their API also provides access to data on many additional
+movies, actors and actresses, crew members, and TV shows.
+*/
+
+

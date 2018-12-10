@@ -1,0 +1,213 @@
+@media only screen and
+(max-width: 800px) and
+(orientation: portrait) {
+  #menu {
+    position: absolute;
+    width: calc(100vw - 75px);
+    height: 100vh;
+    margin: -100px 0 0 -50px;
+    padding: 25px;
+    padding-left: 50px;
+    overflow: auto;
+    background-image: linear-gradient(to left,#6f6f6f,#bbbbbb);
+    -webkit-font-smoothing: antialiased;
+    transform-origin: 0% 0%;
+    transform: translate(-100%, 0);
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  }
+}
+
+@media only screen and
+(max-width: 800px) and
+(orientation: landscape) {
+  #menu {
+    position: absolute;
+    width: 300px;
+    height: 100vh;
+    margin: -100px 0 0 -50px;
+    padding: 25px;
+    padding-left: 50px;
+    overflow: auto;
+    background-image: linear-gradient(to left,#6f6f6f,#bbbbbb);
+    border-right: 2px solid #fff;
+    -webkit-font-smoothing: antialiased;
+    transform-origin: 0% 0%;
+    transform: translate(-100%, 0);
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  }
+}
+
+@media only screen and (min-width: 800px) {
+  #menu {
+    position: absolute;
+    width: 300px;
+    height: 100vh;
+    margin: -100px 0 0 -50px;
+    padding: 25px;
+    padding-left: 50px;
+    overflow: auto;
+    background-image: linear-gradient(to left,#6f6f6f,#bbbbbb);
+    border-right: 2px solid #fff;
+    -webkit-font-smoothing: antialiased;
+    transform-origin: 0% 0%;
+    transform: translate(-100%, 0);
+    transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0);
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: white;
+  font-family: "Avenir Next", "Avenir", sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover{
+  color: tomato;
+}
+
+#leftSidenav {
+  display: block;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  z-index: 1;
+  -webkit-user-select: none;
+}
+
+#leftSidenav input[type="checkbox"] {
+  display: block;
+  width: 40px;
+  height: 32px;
+  position: absolute;
+  top: -7px;
+  left: -5px;
+  cursor: pointer;
+  opacity: 0;
+  z-index: 2;
+}
+
+#leftSidenav span {
+  display: block;
+  width: 33px;
+  height: 4px;
+  margin-bottom: 5px;
+  position: relative;
+  background: #cdcdcd;
+  border-radius: 3px;
+  z-index: 1;
+  transform-origin: 4px 0px;
+  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
+              opacity 0.55s ease;
+}
+
+#leftSidenav span:first-child {
+  transform-origin: 0% 0%;
+}
+
+#leftSidenav span:nth-last-child(2) {
+  transform-origin: 0% 100%;
+}
+
+#leftSidenav input[type="checkbox"]:checked ~ span {
+  opacity: 1;
+  transform: rotate(45deg) translate(-2px, -1px);
+  background: #232323;
+}
+
+#leftSidenav input[type="checkbox"]:checked ~ span:nth-last-child(3) {
+  opacity: 0;
+  transform: rotate(0deg) scale(0.2, 0.2);
+}
+
+#leftSidenav input[type="checkbox"]:checked ~ span:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, -1px);
+}
+
+#actorInput, #movieInput {
+    background-position: 5px;
+    background-repeat: no-repeat;
+    font-size: 16px;
+    padding: 5px 10px 5px 5px;
+    border: none;
+    border-bottom: 1px solid #ddd;
+}
+
+#actorInput, #movieInput:focus {outline: 3px solid #ddd;}
+
+#minInput {
+  background-position: 5px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 15px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#maxInput {
+  background-position: 5px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 15px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#menu a, .dropbtn {
+  text-decoration: none;
+  font-size: 28px;
+  color: #818181;
+  display: block;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+#myDropdown form * {
+  margin-left: 60px;
+}
+
+#menu a:hover, .dropbtn:hover {
+  color: #f1f1f1;
+}
+
+#menu button {
+  padding: 10px 0;
+  font-size: 28px;
+  padding-left: 38px;
+}
+
+.active {
+  color: white;
+}
+
+.dropdown-content {
+  display: none;
+  padding-left: 8px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+#leftSidenav input:checked ~ ul {
+  transform: none;
+}
+
+.dropdownScrollbar-content {
+  display: none;
+  height: auto;
+  max-height: 160px;
+  overflow-x: hidden;
+}

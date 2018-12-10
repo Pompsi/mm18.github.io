@@ -1,0 +1,39 @@
+What this application is about
+
+This map represents the popularity and genre of approximately 5000 movies.
+The popularity is represented by circles of varying sizes and genres are
+specified by the colour of these circles.
+
+This application aims at bulding a map where you can easily
+search movies by name, genre, length, release year or actor while also
+offering a chance to discover movies just by browsing the map. We hope
+that this application introduces new movies for you to watch or lets you
+rediscover some of your old favourites.
+This project is non-commercial and does not make any money. 
+
+About the data
+
+The data we are using is not guaranteed to be precise and we do not
+take any responsibility about the factuality of this data.
+For example some of the movies have a runtime length of 0 and some
+popular movies have really low popularity which has an influence
+on the size of the circles.
+
+How to use this application
+
+You can open and close the navigation/search panel from the top left
+corner of the page. From there you have several options how to filter
+the map to suit your needs. From top to bottom you have option to
+search movies by name, genre, actor(s), release year and length of
+the movie. (You can use one of these after another to filter the
+results even further if you want.)
+
+The map itself represents the movies as circles of various different
+colours and each of these represent one of the genres you can find by
+clicking the 'Colours' button at the bottom of the map. The size of
+the circles represent the popularity of movies which is based on the
+data we are using.
+
+You can see more information about the movie you want by clicking the
+circle that represents it. After that you can see various information
+about the movie in the information panel that opens.

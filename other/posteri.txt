@@ -1,0 +1,31 @@
+The Movie Map
+
+Sovelluksen tarkoituksena on esittää visuaalisesti elokuvien genret sekä suosio.
+Tämä toteutetaan näyttämällä kartalla eri värisiä ja kokoisia palloja, joiden
+väri kertoo elokuvan genren ja koko sen suosion. Värien merkitykset on selitetty
+sovelluksessa itsessään ja pallojen koko kasvaaa suosion kasvaessa.
+
+Palloissa lukee sen elokuvan nimi, jota se kuvaa ja sitä klikatessa sovellus
+avaa infon, joka näyttää elokuvasta tarkempia tietoja, kuten kuvauksen, pituuden,
+tarkemmat genret sekä monia muita.
+
+(kuva)
+
+Sovellus sisältää myös hakutoiminnan, jonka avulla karttassa esitetään vain haun
+toteuttavat elokuvat. Elokuvia voi hakea nimen, genren, näyttelijän, julkaisuvuoden
+ja pituuden perusteella ja näitä hakuja voidaan myös yhdistellä halutulla tavalla.
+
+Projektin toteutus
+
+Projektin toteuttamiseen on käytetty pääasiassa javascriptiä ilman mitään laajennoksia
+ja sovelluksen kartta on esitetty canvasilla.
+
+Data
+
+Projektissa hyödynnetty data on peräisin TMDB:stä (the movie database) ja se
+sisältää tietoja noin 5000:sta elokuvasta. Emme voi taata datan oikeellisuutta
+ja se onkin osin puutteellista. Parsimme datasta itsellemme vain kaiken tarvittavan
+ja veimme sen erillisiin tiedostoihin, joita sovellus käyttää.
+
+
+Sovellus löytyy GitHubista osoitteesta: tämä.tuo.projekti
