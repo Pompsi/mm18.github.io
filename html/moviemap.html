@@ -21,8 +21,7 @@
   <body>
     <!--kartta-->
     <div id="map">
-      <canvas id="canvas">Get a better browser!</canvas>
-      <button type="button" id="button">RESET</button>
+      <canvas id="canvas">The only time you are allowed to use Internet Explorer is when you're downloading Chrome or Mozilla!</canvas>
     </div>
     <!--navi-->
     <nav class="navigation">
@@ -41,26 +40,26 @@
           <button class="dropbtn">Genre</button>
             <div id="myDropdown" class="dropdownScrollbar-content">
                 <form id="genre">
-                  <a href="#" data-name="Action">Action</a>
-                  <a href="#" data-name="Adventure">Adventure</a>
-                  <a href="#" data-name="Animation">Animation</a>
-                  <a href="#" data-name="Comedy">Comedy</a>
-                  <a href="#" data-name="Crime">Crime</a>
-                  <a href="#" data-name="Documentary">Documentary</a>
-                  <a href="#" data-name="Drama">Drama</a>
-                  <a href="#" data-name="Family">Family</a>
-                  <a href="#" data-name="Fantasy">Fantasy</a>
-                  <a href="#" data-name="Foreign">Foreign</a>
-                  <a href="#" data-name="History">History</a>
-                  <a href="#" data-name="Horror">Horror</a>
-                  <a href="#" data-name="Music">Music</a>
-                  <a href="#" data-name="Mystery">Mystery</a>
-                  <a href="#" data-name="Romance">Romance</a>
-                  <a href="#" data-name="Science Fiction">Science Fiction</a>
-                  <a href="#" data-name="Thriller">Thriller</a>
-                  <a href="#" data-name="TV Movie">TV Movie</a>
-                  <a href="#" data-name="War">War</a>
-                  <a href="#" data-name="Western">Western</a>
+                  <a href="#" class="genresearch" data-name="Action">Action</a>
+                  <a href="#" class="genresearch" data-name="Adventure">Adventure</a>
+                  <a href="#" class="genresearch" data-name="Animation">Animation</a>
+                  <a href="#" class="genresearch" data-name="Comedy">Comedy</a>
+                  <a href="#" class="genresearch" data-name="Crime">Crime</a>
+                  <a href="#" class="genresearch" data-name="Documentary">Documentary</a>
+                  <a href="#" class="genresearch" data-name="Drama">Drama</a>
+                  <a href="#" class="genresearch" data-name="Family">Family</a>
+                  <a href="#" class="genresearch" data-name="Fantasy">Fantasy</a>
+                  <a href="#" class="genresearch" data-name="Foreign">Foreign</a>
+                  <a href="#" class="genresearch" data-name="History">History</a>
+                  <a href="#" class="genresearch" data-name="Horror">Horror</a>
+                  <a href="#" class="genresearch" data-name="Music">Music</a>
+                  <a href="#" class="genresearch" data-name="Mystery">Mystery</a>
+                  <a href="#" class="genresearch" data-name="Romance">Romance</a>
+                  <a href="#" class="genresearch" data-name="Science Fiction">Science Fiction</a>
+                  <a href="#" class="genresearch" data-name="Thriller">Thriller</a>
+                  <a href="#" class="genresearch" data-name="TV Movie">TV Movie</a>
+                  <a href="#" class="genresearch" data-name="War">War</a>
+                  <a href="#" class="genresearch" data-name="Western">Western</a>
                 </form>
             </div>
           <button class="dropbtn">Actor</button>
@@ -74,15 +73,15 @@
                 <form id="year">
                   <input type="number" placeholder="min.." id="minYear"  maxlength="4"> <input type="number" placeholder="max.." id="maxYear"  maxlength="4">
                 </form>
-              <input type="submit" value="Search" onclick="movieYearSearch()" id="searchButton">
             </div>
           <button class="dropbtn">Length</button>
-            <div id="myDropdown" class="dropdown-content" style="margin-bottom: 100px">
+            <div id="myDropdown" class="dropdown-content">
                 <form id="length">
                   <input type="number" placeholder="min.." id="minLength"> <input type="number" placeholder="max.." id="maxLength">
                 </form>
-              <input type="submit" value="Search" onclick="movieLengthSearch()" id="searchBtn">
             </div>
+            <input type="button" value="Search" onclick="fullSearch()" id="searchButton">
+            <button type="button" style="margin-bottom: 100px"  id="button">Reset</button>
         </ul>
       </div>
     </nav>

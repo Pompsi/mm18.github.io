@@ -2,13 +2,14 @@
 
 /* Function for leftsidebar dropdown*/
 function dropdown() {
-  var dropdown = document.getElementsByClassName("dropbtn");
-  var i;
+  let dropdown = document.getElementsByClassName("dropbtn");
+  let i;
 
   for (i = 0; i < dropdown.length; i++) {
-  	dropdown[i].addEventListener("click", function() {
+  	dropdown[i].addEventListener('click', function(e) {
+      e.preventDefault();
   		this.classList.toggle("active");
-  		var dropdownContent = this.nextElementSibling;
+  		let dropdownContent = this.nextElementSibling;
   		if (dropdownContent.style.display === "block") {
   			dropdownContent.style.display = "none";
   		} else {
@@ -18,121 +19,91 @@ function dropdown() {
   }
 }
 
-/* Function for searching by movies name */
-function searchByMovie() {
-	var form = document.getElementById("movies");
-	form.addEventListener('submit', movieSearch);
-}
-function movieSearch(event) {
-	event.preventDefault();
-	var input = document.querySelector('#movieInput');
-	var movieInput = input.value;
-	getMovies(movieInput);
+function searchBtn() {
+  document.getElementById("searchButton").addEventListener("mousedown", fullSearch)
 }
 
-function getMovies(movieInput) {
-	var titleId = [];
-    for (let i = 0; i < parsedmovies.length; i++) {
-		var title = parsedmovies[i].title.toString().toLowerCase();
-		if (title.includes(movieInput.toLowerCase())) {
-			titleId.push(parsedmovies[i].id)
-		}
-	}
-	console.log(titleId);
-    showMovies(titleId);
-}
-
-
-/* Function for searching by actors name */
-function searchByActor() {
-	var form = document.getElementById("actors");
-	form.addEventListener('submit', actorSearch);
-}
-function actorSearch(event) {
-	event.preventDefault();
-	var input = document.querySelector('#actorInput');
-	var actorInput = input.value;
-	getActorsMovies(actorInput);
-}
-
-function getActorsMovies(actorInput) {
-	var titleId = [];
-    for (let i = 0; i < parsedmovies.length; i++) {
-		for (let n = 0; n < parsedmovies[i].leadacts.length; n++) {
-			var actor = parsedmovies[i].leadacts[n].actor.toString().toLowerCase();
-			if (actor.includes(actorInput.toLowerCase())) {
-				titleId.push(parsedmovies[i].id)
-			}
-		}
-	}
-	console.log(titleId);
-    showMovies(titleId);
-}
-
-function clickSearch() {
-  let search = document.getElementById("searchBtn");
-  search.addEventListener('submit', movieLengthSearch);
-}
-
-function movieLengthSearch() {
-  let min = document.getElementById("minLength");
-  let max = document.getElementById("maxLength");
-  let minInput = min.value;
-  let maxInput = max.value;
+/* Function for searching movies by different parameters*/
+function fullSearch(e) {
 
   let titleId = [];
-  for (let i = 0; i < parsedmovies.length; i++) {
-    let runtime = parsedmovies[i].runtime;
-      if(minInput <= runtime && runtime <= maxInput) {
-        titleId.push(parsedmovies[i].id);
-      }
-  }
-  console.log(titleId);
-  showMovies(titleId);
-}
+	let movieInput = document.querySelector('#movieInput').value.toLowerCase();
+  let actorInput = document.querySelector('#actorInput').value.toLowerCase();
+  let minInput = document.getElementById("minYear").value;
+  let maxInput = document.getElementById("maxYear").value;
+  let minLengthInput = document.getElementById("minLength").value;
+  let maxLengthInput = document.getElementById("maxLength").value;
 
-function clickSearch() {
-  let search = document.getElementById("searchButton");
-  search.addEventListener('submit', movieYearSearch);
-
-  $('#genre').on('click', 'a', function(event) {
-    var titleId = [];
-    var clicked = $(event.target).data('name');
-    for (let i = 0; i < parsedmovies.length; i++) {
-      var genre = parsedmovies[i].genres;
-      if (genre.includes(clicked)) {
-        titleId.push(parsedmovies[i].id)
+  for (var movie of parsedmovies) {
+    if (movieInput != "") {
+      if (!movie.title.toString().toLowerCase().includes(movieInput)) {
+        continue;
       }
     }
-    showMovies(titleId);
-  });
+
+
+    if (actorInput != "") {
+      let found = false;
+      for (let n = 0; n < movie.leadacts.length; n++) {
+        if (movie.leadacts[n].actor.toString().toLowerCase().includes(actorInput)) {
+            found = true;
+        }
+      }
+      if (!found) {continue;}
+    }
+
+    if (activeGenre != "") {
+      if (!movie.genres.includes(activeGenre)) {
+        continue;
+      }
+    }
+
+    if (minInput != "" || maxInput != "") {
+      if (maxInput == "") {maxInput = 2020}
+      if (minInput == "") {minInput = 0}
+      let release = movie.release;
+      let year = release.split(".").reverse().join(".");
+      let yearParse = parseInt(year);
+      if(parseInt(minInput) > yearParse || yearParse > parseInt(maxInput)) {
+          continue;
+      }
+    }
+
+    let runtime = movie.runtime;
+
+    if (minLengthInput != "" && minLengthInput > runtime) {
+      continue;
+    }
+
+    if (maxLengthInput != "" && maxLengthInput < runtime) {
+      continue;
+    }
+
+
+    titleId.push(movie.id)
+  }
+  showMovies(titleId);
 }
 
-function movieYearSearch() {
-  let min = document.getElementById("minYear");
-  let max = document.getElementById("maxYear");
+var activeGenre = ""
 
+function genreSearch() {
 
-  let minInput = min.value;
-  let maxInput = max.value;
+  $(".genresearch").on('click', function(event) {
+    if (activeGenre == $(event.target).data('name')) {
+      activeGenre = ""
+    } else {
+      activeGenre = $(event.target).data('name');
+    }
 
-  if (minInput == "" ) {
-    minInput = "0";
-  }
+    var genreElements = document.getElementsByClassName("genresearch");
 
-  if (maxInput == "") {
-    maxInput = "2020"
-  }
-
-  let titleId = [];
-  for (let i = 0; i < parsedmovies.length; i++) {
-    let release = parsedmovies[i].release;
-    var year = release.split(".").reverse().join(".");
-    var yearParse = parseInt(year);
-      if(minInput <= yearParse && yearParse <= maxInput) {
-        titleId.push(parsedmovies[i].id);
+    for (var elem of genreElements) {
+      if (elem.getAttribute("data-name") == activeGenre) {
+        elem.style.color = "white";
+      } else {
+        elem.style.color = null;
       }
-  }
-  console.log(titleId);
-  showMovies(titleId);
+    }
+  });
 }

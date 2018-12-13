@@ -1,37 +1,35 @@
 
 /* ---------- GLOBAL VARIABLES ---------- */
-// #region variables
-var objects = [];       // markers
-/* for scaling markers */
-var width = 4000;       // width of canvas
-var height = 4000;      // height of canvas
-/* ------------------- */
-var canvas = undefined; // canvas elements
-var ctx = undefined;    // ctx of canvas
-var scale = undefined;  // scale
-var zoomdelta = 1.3;    // Zoomdelta
-var zoomlevel = 1;      // current zoom level
-var hover = undefined;  // hovered marker
-var minzoom = 1;
 
-var pointers = []
-var pointerD = undefined;
-var dragX = undefined;
-var dragY = undefined;
-var dragSX = undefined;
-var dragSY = undefined;
-var moved = false;
+var objects = [];       // i.e. markers on canvas
 
-// #endregion
+var width = 4000;       // width of canvas  -default map width in data
+var height = 4000;      // height of canvas -default map height in data
+var canvas = undefined; // canvas
+var ctx = undefined;    // 2D rendering context for canvas
+var trf = {e:0, f:0}    // tracks ctx;s transform
 
+var scale = undefined;  // for scaling objects
+var zoomlevel = 1;      // zoomlevel
+var hover = undefined;  // marker below mouse
+var minzoom = 1;        // minimum zoomlevel
 
 /* ---------- INITIALIZATION ---------- */
-// #region INIT
-function init() {
+window.onload = function() {
+  init();
+  dropdown();
+  //searchByMovie();
+  //searchByActor();
+  genreSearch()
+  searchBtn();
+}
 
+// Initializes canvas, objects and variables
+function init() {
   canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
   ctx.webkitImageSmoothingEnabled=true;
+  trf = {e:0, f:0}
 
   resize();
 
@@ -41,20 +39,21 @@ function init() {
 
   if (width > height) {
     ctx.translate((width-height)/2,0)
+    trf.e = (width-height)/2;
   } else {
     ctx.translate(0,(height-width)/2)
+    trf.f = (height-width)/2;
   }
 
-  minzoom = zoomlevel;
+  minzoom = zoomlevel-1;
   updateMap();
 
+
 }
-// #endregion
 
+/* ---------- MAP ---------- */
 
-/* ---------- MAP FUNCTIONS ---------- */
-// #region MAP
-
+// Clears canvas and draws objects
 function updateMap() {
   clearMap();
 
@@ -63,15 +62,15 @@ function updateMap() {
   }
 }
 
+// Clears canvas
 function clearMap() {
   ctx.save();
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.resetTransform()
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   ctx.restore();
 }
 
+// Reloads canvas to its default state
 function resetMap() {
   objects = [];
   dragX = undefined;
@@ -83,45 +82,48 @@ function resetMap() {
   width = 4000;
   height = 4000;
 
-  // clears canvas
+  if (document.getElementById("iright").getAttribute("class") == "ishow") {
+    closeOrOpen();
+  }
+
   clearMap();
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-  // resizing if necessary
+  ctx.resetTransform()
+  trf.e = 0;
+  trf.f = 0;
+  zoomlevel = 1;
   resize();
 
-
-  // creating markers
   objects = createObjects();
 
   addHandlers();
-
   centerMap();
-
-  minzoom = zoomlevel;
-
-  // update and add markers
+  minzoom = zoomlevel - 1;
   updateMovies();
   updateMap();
 
 }
 
+// centers objects in canvas
 function centerMap() {
-  // centering content in canvas
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.resetTransform()
+  trf.e = 0;
+  trf.f = 0;
   if (width > height) {
     ctx.translate((width-height)/2,0)
+    trf.e = (width-height)/2;
   } else {
     ctx.translate(0,(height-width)/2)
+    trf.f = 0;
   }
 }
 
+// centers clicked object
 function focusOn(movie) {
   loadInfo(movie.id)
 
-  /* centering marker */
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.resetTransform()
+  trf.e = 0;
+  trf.f = 0;
   zoomlevel = 1;
   movie.update();
 
@@ -133,21 +135,22 @@ function focusOn(movie) {
 
   updateMovies();
 
-  ctx.translate(-(movie.x)+width/2,-(movie.y)+height/2)
+  trf.e = -(movie.x)+width/2;
+  trf.f = -(movie.y)+height/2;
+  ctx.translate(trf.e,trf.f)
 
-  // updating canvas
   updateMap();
 }
 
+// Updates movies coordinates
 function updateMovies() {
   for (var movie of objects) {
     movie.update();
   }
 }
 
+// resizes canvas to width and height of its container
 function resize() {
-  /* when window resizes */
-  var trf = ctx.getTransform();
   var map = document.getElementById("map").getBoundingClientRect()
   canvas.width = map.width;
   canvas.height = map.height;
@@ -162,50 +165,66 @@ function resize() {
 
   ctx.translate(trf.e,trf.f)
 
-
   width = canvas.width;
   height = canvas.height;
   canvas.style.width = width;
   canvas.style.height = height;
-
   updateMovies();
   updateMap();
 }
 
+// changing zoomlevel
 function zoom(e) {
-  if (e.wheelDelta != undefined) {
-    zoomdelta = e.wheelDelta/100;
-  } else {
-    zoomdelta = e.delta
+
+  if (e.deltaY != undefined) {
+    if (e.deltaY >= 0) {
+      e = {
+        x: e.x,
+        y: e.y,
+        delta: -(1+Math.abs(e.deltaY/100))
+      }
+    } else {
+      e = {
+        x: e.x,
+        y: e.y,
+        delta: (1+Math.abs(e.deltaY/100))
+      }
+    }
   }
 
   var pos = getMapCoordinates(e.x,e.y);
 
-  if (zoomdelta > 0) {
-    zoomlevel = zoomlevel*zoomdelta;
-    var x = -(pos.x*zoomdelta-e.x)
-    var y = -(pos.y*zoomdelta-e.y)
+  if (e.delta > 0) {
+    zoomlevel = zoomlevel*e.delta;
+    var x = -(pos.x*e.delta-e.x)
+    var y = -(pos.y*e.delta-e.y)
   } else {
-    zoomdelta = Math.abs(zoomdelta)
-    zoomlevel = zoomlevel/zoomdelta;
-    var x = -(pos.x/zoomdelta-e.x)
-    var y = -(pos.y/zoomdelta-e.y)
+    e.delta = Math.abs(e.delta)
+    if (zoomlevel/e.delta < minzoom) {
+      return;
+    } else {
+      zoomlevel = zoomlevel/e.delta;
+      var x = -(pos.x/e.delta-e.x)
+      var y = -(pos.y/e.delta-e.y)
+    }
   }
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.resetTransform()
+  trf.e = x;
+  trf.f = y;
   ctx.translate(x,y);
 
   updateMovies();
   updateMap();
 }
 
+// Calculates distance between two points
 function delta(A,B) {
   return Math.sqrt((A.x-B.x)*(A.x-B.x)+(A.y-B.y)*(A.y-B.y));
 }
 
+// Returns position in "map" for the position in canvas element
 function getMapCoordinates(x,y) {
-
-  var trf = ctx.getTransform();
 
   var mapx = (x-trf.e)-canvas.offsetLeft;
   var mapy = (y-trf.f)-canvas.offsetTop;
@@ -213,14 +232,16 @@ function getMapCoordinates(x,y) {
   return {x:mapx,y:mapy}
 }
 
-// #endregion
-
-
 /* ---------- HANDLERS ---------- */
-// #region HANDLERS
 
+var pointers = []         // Tracks active pointers here i.e. mouse and touch
+var pointerD = undefined; // Distance between two active pointers
+var dragX = undefined;    // Pointers X.coordinate
+var dragY = undefined;    // Pointers Y.coordinate
+var moved = false;        // if pointer has been dragged or just clicked
+
+// Returns distance between two active pointers
 function pointerDelta() {
-
   try {
     var pointer1 = pointers[0];
     var pointer2 = pointers[1];
@@ -234,36 +255,28 @@ function pointerDelta() {
   );
 }
 
-window.onload = function() {
-  init();
-  dropdown();
-  searchByMovie();
-  searchByActor();
-  clickSearch()
-  console.log("ver2")
-}
-
+// Adds default handlers to page
 function addHandlers() {
 
   canvas.addEventListener('pointerdown', startDrag)
   canvas.addEventListener('pointermove', updateCursor)
-  canvas.addEventListener('mousewheel', zoom)
+  canvas.addEventListener('wheel', zoom)
 
   window.addEventListener('resize', resize);
   document.getElementById('button').addEventListener('click',resetMap)
 }
 
+// Fires when pointer (i.e. mouse or touch)  is down
 function startDrag(e) {
+  e.preventDefault();
 
   if (pointers.length == 0) {
     moved = false;
     canvas.removeEventListener("pointermove", updateCursor);
     canvas.addEventListener("pointermove", updatePointers)
     document.addEventListener("pointerup", endDrag)
-    //dragX = e.x;
-    //dragY = e.y;
-    dragSX = e.x;
-    dragSY = e.y;
+    dragX = e.x;
+    dragY = e.y;
   }
 
   if (pointers.length >= 2) {
@@ -279,6 +292,7 @@ function startDrag(e) {
   pointers.push(e);
 }
 
+// Fires when pointer moves on screen
 function updatePointers(e) {
 
   let update = false;
@@ -298,30 +312,25 @@ function updatePointers(e) {
       pointerD = pointerDelta();
     }
 
-    if (dragX != undefined || dragY != undefined || dragSY != undefined || dragSX != undefined) {
+    if (dragX != undefined || dragY != undefined) {
       dragX = undefined;
       dragY = undefined;
-      dragSX = undefined;
-      dragSY = undefined;
     }
   }
 
   if (pointers.length == 1) {
-    if (dragX == undefined || dragY == undefined || dragSY == undefined || dragSX == undefined) {
+    if (dragX == undefined || dragY == undefined) {
       dragX = e.x;
       dragY = e.y;
-      dragSX = e.x;
-      dragSY = e.y;
     } else {
       updatePos(pointers[0]);
     }
 
     pointerD = undefined;
   }
-
-  //console.log(pointers.length)
 }
 
+// Fires when user releases pointer
 function endDrag(e) {
   for(var i in pointers) {
     if (pointers[i].pointerId == e.pointerId) {
@@ -335,16 +344,13 @@ function endDrag(e) {
     canvas.addEventListener("pointermove", updateCursor)
 
     if (!moved) {
-      getClickedElement({x:dragSX,y:dragSY})
-      //console.log(dragSX)
+      getClickedElement({x:dragX,y:dragY})
     }
 
     pointers = []
     pointerD = undefined;
     dragX = undefined;
     dragY = undefined;
-    dragSX = undefined;
-    dragSY = undefined;
   }
 
   setTimeout(function() {
@@ -352,21 +358,29 @@ function endDrag(e) {
   },300)
 }
 
+// Updates "Maps" position
 function updatePos(e) {
-  moved = true;
-
   let x = e.x;
   let y = e.y;
 
+  let dx = x-dragX;
+  let dy = y-dragY;
 
-  ctx.translate(x-dragX,y-dragY);
+  if (dx != 0 || dy != 0) {
+    moved = true;
 
-  dragX = x;
-  dragY = y;
+    trf.e += dx;
+    trf.f += dy;
+    ctx.translate(dx,dy);
 
-  updateMap();
+    dragX = x;
+    dragY = y;
+
+    updateMap();
+  }
 }
 
+// Handles zoom on touchscreen
 function pinchZoom() {
   try {
     var pointer1 = pointers[0];
@@ -404,6 +418,7 @@ function pinchZoom() {
   pointerD = newD;
 }
 
+// Handles when user clicks active marker
 function getClickedElement(e) {
 
   if (hover != undefined) {
@@ -418,30 +433,33 @@ function getClickedElement(e) {
   }
 }
 
-function showMovies(ids) {
-
-  if (ids.length == 0) {
-    return;
-  }
+// Sets movie active if its id is in params
+function showMovies(param) {
 
   resetMap();
 
-  if (ids.length == 1) {
+
+  if (param.length == 1) {
     var mov = undefined;
     for (var movie of objects ) {
-      if (movie.id == ids[0]) {
-        focusOn(movie);
-        return;
+      if (movie.id == param[0]) {
+        movie.active = true;
+        mov = movie;
       }
     }
+    focusOn(mov);
   }
 
+
   for (var movie of objects) {
-    movie.active = ids.includes(movie.id)
+    movie.active = param.includes(movie.id)
   }
+
+
   updateMap();
 }
 
+// Fires when non-pressed pointer moves on canvas
 function updateCursor(e) {
   var pos = getMapCoordinates(e.x,e.y)
 
@@ -460,5 +478,3 @@ function updateCursor(e) {
   hover = undefined;
   document.body.style.cursor = "grab";
 }
-
-// #endregion

@@ -1,5 +1,4 @@
-//object in canvas
-
+// Creates markers from data
 function createObjects() {
   var objects = [];
 
@@ -29,7 +28,6 @@ class MovieObject {
   }
 
   update() {
-
     if (this.oldscale != scale) {
       this.x = this.x/scale;
       this.y = this.y/scale;
@@ -52,19 +50,19 @@ class MovieObject {
   }
 
   outOfBounds() {
-    if (this.x+this.r < -ctx.getTransform().e) {
+    if (this.x+this.r < -trf.e) {
       return true;
     }
 
-    if (this.y+this.r < -ctx.getTransform().f) {
+    if (this.y+this.r < -trf.f) {
       return true;
     }
 
-    if (this.x-this.r > canvas.width-ctx.getTransform().e) {
+    if (this.x-this.r > canvas.width-trf.e) {
       return true;
     }
 
-    if (this.y-this.r > canvas.height - ctx.getTransform().f) {
+    if (this.y-this.r > canvas.height - trf.f) {
       return true;
     }
 
@@ -84,7 +82,7 @@ class MovieObject {
     if (this.active) {
       ctx.globalAlpha = 0.6;
     } else {
-      ctx.globalAlpha = 0.1;
+      ctx.globalAlpha = 0.2;
     }
 
     ctx.fill();

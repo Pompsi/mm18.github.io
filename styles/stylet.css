@@ -181,7 +181,7 @@ a:hover{
   color: #f1f1f1;
 }
 
-#menu button {
+#menu .dropbtn {
   padding: 10px 0;
   font-size: 28px;
   padding-left: 38px;

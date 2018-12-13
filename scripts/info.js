@@ -15,7 +15,12 @@ $(document).on("click", "#iopen", closeOrOpen);
 
 
 function closeOrOpen(e) {
-  e.preventDefault();
+  try {
+    e.preventDefault();
+  } catch(e) {
+    // pass
+  }
+
   var a = (document.getElementById("iright")).getAttribute("class");
   if (a == "ishow") {
     (document.getElementById("iclose")).setAttribute("id", "iopen");
