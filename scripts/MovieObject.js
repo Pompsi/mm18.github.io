@@ -1,3 +1,8 @@
+/*
+This code is in the public domain.
+This software is provided "as is", no warranty of any kind.
+*/
+
 // Creates markers from data
 function createObjects() {
   var objects = [];

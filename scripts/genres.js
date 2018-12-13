@@ -1,4 +1,9 @@
 /*
+This code is in the public domain.
+This software is provided "as is", no warranty of any kind.
+*/
+
+/*
   genreSort()
   param movies: list of movies.
   returns: object where movies are organized according to genres

@@ -1,3 +1,7 @@
+/*
+This code is in the public domain.
+This software is provided "as is", no warranty of any kind.
+*/
 "use strict";
 
 /* Function for leftsidebar dropdown*/
@@ -20,7 +24,7 @@ function dropdown() {
 }
 
 function searchBtn() {
-  document.getElementById("searchButton").addEventListener("mousedown", fullSearch)
+  document.getElementById("searchButton").addEventListener("click", fullSearch)
 }
 
 /* Function for searching movies by different parameters*/
